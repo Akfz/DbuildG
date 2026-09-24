@@ -1,0 +1,8 @@
+v.akfz.dbg.helper.impl.UseLoaderSourceSetHelper
+v.akfz.dbg.helper.impl.EmbedHelper
+v.akfz.dbg.helper.impl.FilterForeignMetadataHelper
+v.akfz.dbg.helper.impl.DevJarHelper
+v.akfz.dbg.helper.impl.ObfJarHelper
+v.akfz.dbg.helper.impl.DbuildDepHelper
+v.akfz.dbg.helper.impl.RegistryCommandHelper
+v.akfz.dbg.helper.impl.DbuildAnnotationsHelper

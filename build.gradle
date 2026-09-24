@@ -1,0 +1,42 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'java'
+    id 'maven-publish'
+}
+
+group = 'io.github.Akfz'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+gradlePlugin {
+    plugins {
+        DbuildGradle {
+            id = 'v.akfz.dbg'
+            implementationClass = 'v.akfz.dbg.DbuildGradlePlugin'
+            displayName = 'Dbuild multiloader plugin'
+            description = 'Single-project multiloader plugin for Fabric/Forge/NeoForge'
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = project.group
+            artifactId = 'dbg'
+            version = project.version
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
