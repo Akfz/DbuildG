@@ -52,6 +52,8 @@ public class DevJarHelper implements Helper {
                 if (embed != null) jar.from(embed);
                 jar.getManifest().attributes(baseManifest(loader, baseName, version, modId));
             });
+
+            p.getTasks().named("build").configure(t -> t.dependsOn(taskName));
         }
     }
 
