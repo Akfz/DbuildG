@@ -22,7 +22,7 @@ Add DBuild to your `build.gradle`:
 ```groovy
 plugins {
     id 'java'
-    id 'io.github.Akfz.dbg' version '1.0.0'
+    id 'io.github.Akfz.dbg' version '1.0.1'
 
     id 'fabric-loom' apply false
     id 'net.minecraftforge.gradle' apply false
