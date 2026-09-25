@@ -10,13 +10,17 @@ import v.akfz.dbg.util.GradleWrapper;
  * Registers Exec wrapper tasks for the active loader, one per command.
  *
  * Per-loader form (fires only when that loader is active):
+ * <pre>
  *   dbuild { fabric { registryCommand 'runClient', 'runServer' } }
  *   → fabricRunClient, fabricRunServer
+ * </pre>
  *
  * Each wrapper runs in a fresh OS process:
- *   ./gradlew <command> -Pdbuild.loader=<loader>
+ * <pre>
+ *   ./gradlew &lt;command&gt; -Pdbuild.loader=&lt;loader&gt;
+ * </pre>
  *
- * For the global form (all loaders at once), see DbuildExtension.registryCommand().
+ * For the global form (all loaders at once), see {@code DbuildExtension.registryCommand()}.
  */
 public class RegistryCommandHelper implements Helper {
 

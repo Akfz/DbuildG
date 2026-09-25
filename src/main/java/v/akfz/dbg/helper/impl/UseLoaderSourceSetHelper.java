@@ -14,10 +14,12 @@ import java.util.Set;
 
 /**
  * Adds per-loader source dirs:
- *   - src/main/common/{java,resources}      always
- *   - src/main/<loader>/{java,resources}    for loaders configured in build.gradle
+ * <pre>
+ *   src/main/common/{java,resources}      always
+ *   src/main/&lt;loader&gt;/{java,resources}    for loaders configured in build.gradle
+ * </pre>
  *
- * Replaces default srcDirs — src/main/{java,resources} is NOT included.
+ * Replaces default srcDirs — {@code src/main/{java,resources}} is NOT included.
  * Add it back yourself if needed.
  *
  * Directories for common + every configured loader are created.

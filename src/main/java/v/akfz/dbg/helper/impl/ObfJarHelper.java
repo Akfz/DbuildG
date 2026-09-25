@@ -14,8 +14,10 @@ import v.akfz.dbg.helper.api.LoaderContext;
 /**
  * Registers the production (obfuscated) jar task for the active loader.
  *
- * - fabric:   renames `remapJar` → <base>-<version>-fabric.jar
- * - forge/…:  renames `jar`      → <base>-<version>-<loader>.jar
+ * <ul>
+ *   <li>fabric:   renames {@code remapJar} → {@code <base>-<version>-fabric.jar}</li>
+ *   <li>forge/…:  renames {@code jar}      → {@code <base>-<version>-<loader>.jar}</li>
+ * </ul>
  *
  * This is the release artifact — no dev sources, no debug classes.
  */

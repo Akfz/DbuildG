@@ -12,10 +12,12 @@ import java.util.Map;
 /**
  * Registers the dev jar task for the active loader.
  *
- * - fabric:    renames default `jar` → <base>-<version>-fabric-dev.jar
- * - forge/…:   registers <loader>DevJar → <base>-<version>-<loader>-dev.jar
+ * <ul>
+ *   <li>fabric:    renames default {@code jar} → {@code <base>-<version>-fabric-dev.jar}</li>
+ *   <li>forge/…:   registers {@code <loader>DevJar} → {@code <base>-<version>-<loader>-dev.jar}</li>
+ * </ul>
  *
- * Dev jars are un-obfuscated. Combine with obfJar() to also get the prod jar.
+ * Dev jars are un-obfuscated. Combine with {@code obfJar()} to also get the prod jar.
  */
 public class DevJarHelper implements Helper {
 

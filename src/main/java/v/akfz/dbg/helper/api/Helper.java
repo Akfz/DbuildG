@@ -7,24 +7,23 @@ public interface Helper {
     String name();
 
     /**
-     * Specifies the loaders for which this is applicable. An empty set means all loaders. 
-     * For example, the mixin-AP helper is applicable only to Forge/NeoForge. 
-    */
+     * Loaders this helper applies to. Empty set = all loaders.
+     * Example: the mixin AP helper applies only to Forge/NeoForge.
+     */
     default Set<String> loaders() {
         return Set.of();
     }
 
     /**
-     * lower - earlier
-     * @return <50 before closures >= 50 after
+     * Lower — earlier. Helpers with {@code order < 50} run before user closures,
+     * with {@code order >= 50} — after.
      */
     default int order() {
         return 100;
     }
 
     /**
-     * one time per loader
-     * @param ctx
+     * Called once per loader.
      */
     void apply(LoaderContext ctx);
-}
+    }
