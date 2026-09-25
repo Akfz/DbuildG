@@ -17,8 +17,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** Implements @DevOnly / @OnlyLoader / @ProdOnly by scanning sources. No runtime deps. */
+/**
+ * Implements @DevOnly / @OnlyLoader / @ProdOnly by scanning sources.
+ *
+ * - @DevOnly       kept in dev jar, excluded from prod jar
+ * - @ProdOnly      kept in prod jar, excluded from dev jar
+ * - @OnlyLoader    kept only for the listed loaders
+ *
+ * No runtime deps — parser only, works without DBuild itself.
+ * Only the active loader is processed; common is skipped.
+ */
 public class DbuildAnnotationsHelper implements Helper {
+    private static final Pattern P_ENUM_NAME = Pattern.compile("\\b([A-Z_]+)\\b");
 
     @Override public String name() { return "dbuildannotations"; }
     @Override public int order() { return 65; }
@@ -134,8 +144,14 @@ public class DbuildAnnotationsHelper implements Helper {
         Matcher m = P_ONLYLOADER.matcher(s);
         String cur = currentLoader.toUpperCase();
         while (m.find()) {
-            String args = m.group(1).toUpperCase();
-            if (!args.contains(cur)) return true;
+            Matcher em = P_ENUM_NAME.matcher(m.group(1).toUpperCase());
+            boolean found = false;
+            while (em.find()) {
+                String name = em.group(1);
+                if (name.equals("LOADER")) continue;
+                if (name.equals(cur)) { found = true; break; }
+            }
+            if (!found) return true;
         }
         return false;
     }

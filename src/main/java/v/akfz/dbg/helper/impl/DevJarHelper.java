@@ -10,7 +10,12 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * End-jar without obfuscation and with sources, java-doc
+ * Registers the dev jar task for the active loader.
+ *
+ * - fabric:    renames default `jar` → <base>-<version>-fabric-dev.jar
+ * - forge/…:   registers <loader>DevJar → <base>-<version>-<loader>-dev.jar
+ *
+ * Dev jars are un-obfuscated. Combine with obfJar() to also get the prod jar.
  */
 public class DevJarHelper implements Helper {
 

@@ -1,5 +1,6 @@
 package v.akfz.dbg.util;
 
+import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 
 public final class DbuildProps {
@@ -27,13 +28,13 @@ public final class DbuildProps {
 
                 ╔══════════════════════════════════════════════════════════════╗
                 ║  FIXME [dbuild] required property is not set:                ║
-                ║      %s
-                ║
-                ║  Set it in ONE of:
-                ║    1) dbuild { %s = '...' }
-                ║    2) gradle.properties -> %s=...
+                ║      %s                                                      ║
+                ║                                                              ║
+                ║  Set it in ONE of:                                           ║
+                ║    1) dbuild { %s = '...' }                                  ║
+                ║    2) gradle.properties -> %s=...                            ║
                 ╚══════════════════════════════════════════════════════════════╝
                 """.formatted(gradleKey, extKey, gradleKey);
-        throw new IllegalStateException(msg);
+        throw new GradleException(msg);
     }
 }

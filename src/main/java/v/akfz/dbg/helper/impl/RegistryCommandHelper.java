@@ -1,19 +1,22 @@
 package v.akfz.dbg.helper.impl;
 
-import org.gradle.StartParameter;
 import org.gradle.api.Project;
-import org.gradle.api.tasks.GradleBuild;
+import org.gradle.api.tasks.Exec;
 import v.akfz.dbg.helper.api.Helper;
 import v.akfz.dbg.helper.api.LoaderContext;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import v.akfz.dbg.util.GradleWrapper;
 
 /**
- * Registers a Gradle wrapper task `<loader><Command>`
- * that executes `./gradlew <command> -Pdbuild.loader=<loader>`
- * in a separate nested Gradle session.
+ * Registers Exec wrapper tasks for the active loader, one per command.
+ *
+ * Per-loader form (fires only when that loader is active):
+ *   dbuild { fabric { registryCommand 'runClient', 'runServer' } }
+ *   → fabricRunClient, fabricRunServer
+ *
+ * Each wrapper runs in a fresh OS process:
+ *   ./gradlew <command> -Pdbuild.loader=<loader>
+ *
+ * For the global form (all loaders at once), see DbuildExtension.registryCommand().
  */
 public class RegistryCommandHelper implements Helper {
 
@@ -25,25 +28,20 @@ public class RegistryCommandHelper implements Helper {
         Project p = ctx.project();
         String loader = ctx.loader();
 
-        Map<String, String> props = new HashMap<>(
-                p.getGradle().getStartParameter().getProjectProperties());
-        props.put("dbuild.loader", loader);
-
         for (String command : ctx.block().getHelperArgs("registryCommand")) {
             String wrapperName = loader + capitalize(command);
-            p.getTasks().register(wrapperName, GradleBuild.class, t -> {
-                t.setGroup("dbuild");
-                t.setDescription("Runs `./gradlew " + command + " -Pdbuild.loader=" + loader + "`");
-                t.setDir(p.getProjectDir());
-                t.setTasks(List.of(command));
 
-                StartParameter sp = p.getGradle().getStartParameter().newBuild();
-                sp.setCurrentDir(p.getProjectDir());
-                sp.setProjectProperties(props);
-                t.setStartParameter(sp);
-            });
-            p.getLogger().lifecycle("[dbuild/{}] registered command: {} -> gradlew {}",
-                    loader, wrapperName, command);
+            if (p.getTasks().findByName(wrapperName) != null) {
+                p.getLogger().warn("[dbuild] task {} already exists, skipping", wrapperName);
+                continue;
+            }
+
+            p.getTasks().register(wrapperName, Exec.class,
+                    t -> GradleWrapper.configure(p, t, command, loader));
+
+            p.getLogger().lifecycle(
+                    "[dbuild] registered command: {} -> {} {} -Pdbuild.loader={}",
+                    wrapperName, GradleWrapper.displayName(), command, loader);
         }
     }
 

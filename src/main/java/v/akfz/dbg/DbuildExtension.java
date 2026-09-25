@@ -5,9 +5,13 @@ import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
 
 import javax.inject.Inject;
+
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class DbuildExtension {
 
@@ -19,7 +23,9 @@ public abstract class DbuildExtension {
 
     private final LoaderBlock common;
     private static final List<String> ALL = List.of("common", "fabric", "forge", "neoforge", "quilt");
+    private static final List<String> LOADERS = List.of("fabric", "forge", "neoforge", "quilt");
     private final Map<String, LoaderBlock> blocks = new LinkedHashMap<>();
+    private final Map<String, List<String>> globalCommands = new LinkedHashMap<>();
 
     @Inject
     public DbuildExtension(ObjectFactory objects) {
@@ -33,18 +39,38 @@ public abstract class DbuildExtension {
 
     public void useLoaderSourceSet() { ALL.forEach(n -> block(n).useLoaderSourceSet()); }
     public void filterForeignMetadata() { ALL.forEach(n -> block(n).filterForeignMetadata()); }
-    public void devJar() { ALL.forEach(n -> block(n).devJar()); }
-    public void obfJar() { ALL.forEach(n -> block(n).obfJar()); }
 
-    public void embed(String... notations) {
-        ALL.forEach(n -> block(n).embed(notations));
+    public void devJar() { LOADERS.forEach(n -> block(n).devJar()); }
+    public void obfJar() { LOADERS.forEach(n -> block(n).obfJar()); }
+
+    public void embed(String... notations) { ALL.forEach(n -> block(n).embed(notations));}
+
+    public void dbuild(String version) {ALL.forEach(n -> block(n).dbuild(version));}
+
+    public void registryCommand(String command, String... loaders) {
+        for (String loader : loaders) {
+            if (loader == null || loader.isBlank()) continue;
+            globalCommands.computeIfAbsent(loader.toLowerCase(), k -> new ArrayList<>()).add(command);
+        }
     }
 
-    public void dbuild(String version) {
-        ALL.forEach(n -> block(n).dbuild(version));
+    public Map<String, List<String>> getGlobalCommands() {
+        return globalCommands;
     }
 
     public void dbuildannotations() { ALL.forEach(n -> block(n).dbuildannotations()); }
+
+    @SuppressWarnings("null")
+    public Set<String> getConfiguredLoaders() {
+        Set<String> result = new LinkedHashSet<>();
+        for (Map.Entry<String, LoaderBlock> e : blocks.entrySet()) {
+            @SuppressWarnings("null")
+            String name = e.getKey();
+            if ("common".equals(name)) continue;
+            if (e.getValue().hasConfigureClosures()) result.add(name);
+        }
+        return result;
+    }
     
     public LoaderBlock getCommon() { return common; }
     public void common(Action<? super LoaderBlock> action) { action.execute(common); }

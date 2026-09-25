@@ -11,10 +11,15 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Removes metadata files belonging to other mod loaders from processResources
- * to prevent files like mods.toml, fabric.mod.json, etc., from ending up in a specific loader's JAR. 
- * Java code separation is handled by useLoaderSourceSet; this helper deals only with resources. 
-*/
+ * Excludes foreign mod-loader metadata from processResources.
+ *
+ * - fabric:   keeps fabric.mod.json,   drops quilt/mods.toml/neoforge.mods.toml
+ * - forge:    keeps mods.toml,         drops fabric/quilt/neoforge
+ * - neoforge: keeps neoforge.mods.toml, drops fabric/quilt/mods.toml
+ * - quilt:    keeps quilt.mod.json,    drops fabric/mods.toml/neoforge.mods.toml
+ *
+ * Resources only — Java code separation is handled by useLoaderSourceSet().
+ */
 public class FilterForeignMetadataHelper implements Helper {
 
     @Override public String name() { return "filterForeignMetadata"; }

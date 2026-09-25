@@ -1,7 +1,6 @@
 plugins {
     id 'java-gradle-plugin'
-    id 'java'
-    id 'maven-publish'
+    id 'com.gradle.plugin-publish' version '2.1.1'
 }
 
 group = 'io.github.Akfz'
@@ -17,26 +16,16 @@ repositories {
 }
 
 gradlePlugin {
+    website = 'https://github.com/Akfz/DbuildG'
+    vcsUrl  = 'https://github.com/Akfz/DbuildG'
+
     plugins {
         DbuildGradle {
-            id = 'v.akfz.dbg'
+            id                  = 'io.github.Akfz.dbg'
             implementationClass = 'v.akfz.dbg.DbuildGradlePlugin'
-            displayName = 'Dbuild multiloader plugin'
-            description = 'Single-project multiloader plugin for Fabric/Forge/NeoForge'
+            displayName         = 'Dbuild multiloader plugin'
+            description         = 'Single-project multiloader plugin for Fabric/Forge/NeoForge'
+            tags.set(['minecraft', 'multiloader', 'mods'])
         }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            groupId = project.group
-            artifactId = 'dbg'
-            version = project.version
-        }
-    }
-    repositories {
-        mavenLocal()
     }
 }

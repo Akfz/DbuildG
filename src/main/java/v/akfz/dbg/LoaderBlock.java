@@ -64,6 +64,10 @@ public class LoaderBlock {
         addHelperArgs("registryCommand", List.of(commands));
     }
 
+    public boolean hasConfigureClosures() {
+        return !closures.isEmpty();
+    }
+
     public void dbuildannotations() { enableHelper("dbuildannotations"); }
     
     public void applyTo(Project project) {

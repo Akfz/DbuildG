@@ -12,7 +12,12 @@ import v.akfz.dbg.helper.api.Helper;
 import v.akfz.dbg.helper.api.LoaderContext;
 
 /**
- * obfuscated end-jar 
+ * Registers the production (obfuscated) jar task for the active loader.
+ *
+ * - fabric:   renames `remapJar` → <base>-<version>-fabric.jar
+ * - forge/…:  renames `jar`      → <base>-<version>-<loader>.jar
+ *
+ * This is the release artifact — no dev sources, no debug classes.
  */
 public class ObfJarHelper implements Helper {
 
